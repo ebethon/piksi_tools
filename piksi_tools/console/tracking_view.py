@@ -155,7 +155,7 @@ class TrackingView(CodeFiltered):
 
       # set plot data and create plot for any selected for display
       cn0_values = cno_array[:,:-1]
-      self.plot_data.set_data(key, cn0_values.reshape(len(cn0_values)))
+      self.plot_data.update_data({key: cn0_values.reshape(len(cn0_values))})
 
       # if channel is inactive:
       if 0 == cno_array[-1][0]:
@@ -192,7 +192,7 @@ class TrackingView(CodeFiltered):
   def update_plot(self):
     plot_labels = []
     plots = []
-    self.plot_data.set_data('t', self.time)
+    self.plot_data.update_data({'t': self.time})
 
     self._remove_stail_plots()
 
