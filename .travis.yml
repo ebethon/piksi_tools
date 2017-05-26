@@ -28,9 +28,9 @@ script:
   - tox
   - export TRAITS_DEBUG="1" 
   - rm -rf ~/home/.enthought
-  - PYTHONPATH=. python piksi_tools/console/console.py --file --error -p ./tests/data/piksi.bin & PID=$!
-  - sleep 10 
-  - kill -n 9  $PID
+  # - PYTHONPATH=. python piksi_tools/console/console.py --file --error -p ./tests/data/piksi.bin & PID=$!
+  # - sleep 10 
+  # - kill -n 9  $PID
   - make build_console
   - sudo python setup.py install
 
