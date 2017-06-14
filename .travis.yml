@@ -44,8 +44,8 @@ script:
 
 cache:
   directories:
-  - $HOME/.pip/cache/
-  - /Library/Caches/Homebrew/
+    - $HOME/.cache/pip/
+    - /Library/Caches/Homebrew/
 
 addons:
   artifacts:
