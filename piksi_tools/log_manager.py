@@ -49,18 +49,12 @@ from piksi_tools.fileio import FileIO
 import ast
 
 
-def download(fileio_link, log_path, log_list, dest_path):
-    log_list = ast.literal_eval(log_list)
-    logs = [n.strip() for n in log_list]
-    sbp_files = []
-    for f in logs:
-        if f.split('.')[-1] == 'sbp':
-            sbp_files.append(f)
+def download(fileio_link, log_path, sbp_files, dest_path):
     print("Download %s in %s" % (sbp_files, log_path))
     index = 1
     total = len(sbp_files)
     for f in sbp_files:
-        with open(dest_path+"/"+f, "wb+") as log:
+        with open(dest_path + "/" + f, "wb+") as log:
             print("Downloading %s... (%d/%d)" % (f, index, total))
             log.write(fileio_link.read(log_path+f))
             index += 1
@@ -71,30 +65,36 @@ def download(fileio_link, log_path, log_list, dest_path):
 def list(fileio_link, log_path):
     print("SBP files in %s:" % log_path)
     files = fileio_link.readdir(log_path)
-    sbp_files = []
-    for f in files:
-        if f.split('.')[-1] == 'sbp':
-            sbp_files.append(f)
+    print(files)
+    sbp_files = filter_sbp_files(files)
     print(sbp_files)
-    return str(sbp_files)
+    return sbp_files
 
 
-def remove(fileio_link, log_path, log_list):
-    log_list = ast.literal_eval(log_list)
-    logs = [n.strip() for n in log_list]
-    sbp_files = []
-    for f in logs:
-        if f.split('.')[-1] == 'sbp':
-            sbp_files.append(f)
+def remove(fileio_link, log_path, sbp_files):
     print("Remove %s in %s" % (sbp_files, log_path))
     index = 1
     total = len(sbp_files)
     for f in sbp_files:
         print("Removing %s... (%d/%d)" % (f, index, total))
-        fileio_link.remove(log_path+"/"+f)
+        fileio_link.remove(log_path + "/" + f)
         index += 1
     print("Done")
     return
+
+
+def parse_files_string(files_string):
+    files_string = ast.literal_eval(files_string)
+    files = [n.strip() for n in files_string]
+    return filter_sbp_files(files)
+
+
+def filter_sbp_files(files):
+    sbp_files = []
+    for f in files:
+        if f.split('.')[-1] == 'sbp':
+            sbp_files.append(f)
+    return sbp_files
 
 
 def get_args():
@@ -141,12 +141,12 @@ def main():
             if args.list == 'all':
                 download(fileio_link, log_path, list(fileio_link, log_path), args.dest)
             else:
-                download(fileio_link, log_path, args.list, args.dest)
+                download(fileio_link, log_path, parse_files_string(args.list), args.dest)
         elif command == 'remove':
             if args.list == 'all':
                 remove(fileio_link, log_path, list(fileio_link, log_path))
             else:
-                remove(fileio_link, log_path, args.list)
+                remove(fileio_link, log_path, parse_files_string(args.list))
         elif command == 'list':
             list(fileio_link, log_path)
     return return_code
