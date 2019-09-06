@@ -268,7 +268,7 @@ def main():
                                 break
 
     else:
-        base_log = args.base_log
+        base_log = args.base[0]
         rover_log = args.rover_log
 
     with open(base_log, 'r') as base_log_handle:
