@@ -224,6 +224,10 @@ class Settings(object):
         """Reset to default settings and reset device"""
         self.link(MsgReset(flags=1))
 
+    def restart(self):
+        """Reset device and keep saved settings"""
+        self.link(MsgReset(flags=0))
+
     def read_to_file(self, output, verbose=False):
         """Read settings to output ini file."""
         settings_list = self.read_all(verbose=verbose)
@@ -341,6 +345,9 @@ def get_args(args=None):
     reset = subparsers.add_parser(
         'reset', help='reset settings to factory defaults.')
 
+    restart = subparsers.add_parser(
+    'restart', help='restart device keeping saved settings.')
+
     read = subparsers.add_parser('read', help='read the current setting.')
     read.add_argument("section", help="the setting section.")
     read.add_argument("setting", help="the setting name.")
@@ -384,6 +391,8 @@ def main(args=None):
                 settings.save()
             elif command == 'reset':
                 settings.reset()
+            elif command == 'restart':
+                settings.restart()
             elif command == 'read_to_file':
                 settings.read_to_file(args.output, verbose=args.verbose)
             elif command == 'write_from_file':
